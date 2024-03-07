@@ -14,38 +14,116 @@ export default function Login({
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const enteredUsername = formData.get("username") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
+    });
+
+    if (authError) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+
+    // Fetch the user's username from the profiles table
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profileError) {
+      console.error("Error fetching profile:", profileError);
+      return redirect("/login?message=Error fetching user profile");
+    }
+
+    // Validate the entered username
+    if (profile.username !== enteredUsername) {
+      return redirect("/login?message=Invalid username");
+    }
+
+    console.log("Sign-in successful");
+    return redirect("/protected");
+  };
+
+  // const signIn = async (formData: FormData) => {
+  //   "use server";
+
+  //   const email = formData.get("email") as string;
+  //   const password = formData.get("password") as string;
+  //   const supabase = createClient();
+
+  //   const { error } = await supabase.auth.signInWithPassword({
+  //     email,
+  //     password,
+  //   });
+
+  //   if (error) {
+  //     return redirect("/login?message=Could not authenticate user");
+  //   }
+
+  //   return redirect("/protected");
+  // };
+
+  // const signUp = async (formData: FormData) => {
+  //   "use server";
+
+  //   const origin = headers().get("origin");
+  //   const username = formData.get("username") as string;
+  //   const email = formData.get("email") as string;
+  //   const password = formData.get("password") as string;
+  //   const supabase = createClient();
+
+  //   const { error } = await supabase.auth.signUp({
+  //     email,
+  //     password,
+  //     options: {
+  //       emailRedirectTo: `${origin}/auth/callback`,
+  //       data: {
+  //         user_name: username,
+  //       },
+  //     },
+  //   });
+
+  //   if (error) {
+  //     return redirect("/login?message=Could not authenticate user");
+  //   }
+
+  //   return redirect("/login?message=Check email to continue sign in process");
+  // };
+
+  const signUp = async (formData: FormData) => {
+    "use server";
+
+    const origin = headers().get("origin");
+    const username = formData.get("username") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const supabase = createClient();
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+        data: {
+          user_name: username,
+        },
+      },
     });
 
     if (error) {
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/protected");
-  };
+    // Insert the username into the profiles table
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({ id: data.user?.id, username });
 
-  const signUp = async (formData: FormData) => {
-    "use server";
-
-    const origin = headers().get("origin");
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      return redirect("/login?message=Could not authenticate user");
+    if (profileError) {
+      console.error("Error inserting profile:", profileError);
     }
 
     return redirect("/login?message=Check email to continue sign in process");
@@ -75,6 +153,15 @@ export default function Login({
       </Link>
 
       <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+        <label className="text-md" htmlFor="username">
+          Username
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="username"
+          placeholder="username"
+          required
+        />
         <label className="text-md" htmlFor="email">
           Email
         </label>
