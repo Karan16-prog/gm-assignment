@@ -2,54 +2,15 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
 import { prisma } from "../lib/prisma";
+import { SubmitButton } from "../login/submit-button";
 
-export default function Login({
+export default function UserProfile({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-  const signIn = async (formData: FormData) => {
-    "use server";
-
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const username = formData.get("username") as string;
-    const supabase = createClient();
-
-    try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword(
-        {
-          email,
-          password,
-        }
-      );
-
-      if (authError) {
-        return redirect("/login?message=Could not authenticate user");
-      }
-
-      const userFromDb = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
-
-      if (!userFromDb) {
-        return redirect("/login?message=User not found");
-      }
-
-      console.log("Sign-in successful", userFromDb);
-    } catch (error) {
-      console.log(error);
-      return redirect("/login?message=Could not authenticate user");
-    }
-
-    return redirect("/protected");
-  };
-
-  const signUp = async (formData: FormData) => {
+  const updateData = async (formData: FormData) => {
     "use server";
 
     const origin = headers().get("origin");
@@ -59,37 +20,39 @@ export default function Login({
     const supabase = createClient();
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Update user in Supabase Auth
+      const { data, error } = await supabase.auth.updateUser({
         email,
-        password,
-        options: {
-          emailRedirectTo: `${origin}/auth/callback`,
-          data: {
-            user_name: username,
-          },
+        password: password ? password : undefined, // Only update password if provided
+        data: {
+          user_name: username,
         },
       });
 
       if (error) {
         console.log(error);
-        return redirect("/login?message=Could not authenticate user 1");
+        return redirect("/profile?message=Could not update user data 1");
       }
 
-      // const createdUser = await prisma.user.create({
-      //   data: {
-      //     id: data?.user?.id,
-      //     email,
-      //     username,
-      //     password, 
-      //   },
-      // });
+      // Find and update user in Prisma database
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: data?.user?.id,
+        },
+        data: {
+          email,
+          username,
+          //  password,
+        },
+      });
 
-     // console.log(createdUser);
+      console.log(updatedUser);
     } catch (error) {
       console.log(error);
-      return redirect("/login?message=Could not authenticate user 2");
+      return redirect("/profile?message=Could not update user data 2");
     }
-    return redirect("/login?message=Check email to continue sign in process");
+
+    return redirect("/profile?message=User data updated successfully");
   };
 
   return (
@@ -117,7 +80,7 @@ export default function Login({
 
       <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
         <label className="text-md" htmlFor="username">
-          Username
+          Update Username
         </label>
         <input
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
@@ -126,7 +89,7 @@ export default function Login({
           required
         />
         <label className="text-md" htmlFor="email">
-          Email
+          Update Email
         </label>
         <input
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
@@ -135,7 +98,7 @@ export default function Login({
           required
         />
         <label className="text-md" htmlFor="password">
-          Password
+          Update Password
         </label>
         <input
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
@@ -144,20 +107,15 @@ export default function Login({
           placeholder="••••••••"
           required
         />
+
         <SubmitButton
-          formAction={signIn}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
-        >
-          Sign In
-        </SubmitButton>
-        <SubmitButton
-          formAction={signUp}
+          formAction={updateData}
           className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing Up..."
+          pendingText="Updating profile..."
         >
-          Sign Up
+          Update profile
         </SubmitButton>
+
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
@@ -167,3 +125,6 @@ export default function Login({
     </div>
   );
 }
+
+// change primsa code
+// change supabase to update
