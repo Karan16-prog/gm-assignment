@@ -32,7 +32,7 @@ export default async function UserProfile({
     try {
       // Update user in Supabase Auth
       const { data, error } = await supabase.auth.updateUser({
-        email,
+        email: email.length > 0 ? email : undefined,
         password: password ? password : undefined, // Only update password if provided
         data: {
           user_name: username,
@@ -40,7 +40,7 @@ export default async function UserProfile({
       });
 
       if (error) {
-        return redirect("/profile?message=Could not update user data 1");
+        throw new Error(`${error.message}`);
       }
 
       // Find and update user in Prisma database
@@ -55,7 +55,8 @@ export default async function UserProfile({
         },
       });
     } catch (error) {
-      return redirect("/profile?message=Could not update user data 2");
+      console.log(error);
+      return redirect("/profile?message=Could not update user data");
     }
 
     return redirect("/profile?message=User data updated successfully");
