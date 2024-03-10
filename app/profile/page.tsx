@@ -5,11 +5,21 @@ import { redirect } from "next/navigation";
 import { prisma } from "../lib/prisma";
 import { SubmitButton } from "../login/submit-button";
 
-export default function UserProfile({
+export default async function UserProfile({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return redirect("/login");
+  }
+
   const updateData = async (formData: FormData) => {
     "use server";
 
@@ -30,7 +40,6 @@ export default function UserProfile({
       });
 
       if (error) {
-        console.log(error);
         return redirect("/profile?message=Could not update user data 1");
       }
 
@@ -45,10 +54,7 @@ export default function UserProfile({
           //  password,
         },
       });
-
-      console.log(updatedUser);
     } catch (error) {
-      console.log(error);
       return redirect("/profile?message=Could not update user data 2");
     }
 
@@ -125,6 +131,3 @@ export default function UserProfile({
     </div>
   );
 }
-
-// change primsa code
-// change supabase to update

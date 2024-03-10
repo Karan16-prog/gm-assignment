@@ -15,7 +15,7 @@ export default function Login({
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const username = formData.get("username") as string;
+    // const username = formData.get("username") as string;
     const supabase = createClient();
 
     try {
@@ -39,14 +39,11 @@ export default function Login({
       if (!userFromDb) {
         return redirect("/login?message=User not found");
       }
-
-      console.log("Sign-in successful", userFromDb);
     } catch (error) {
-      console.log(error);
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/protected");
+    return redirect("/");
   };
 
   const signUp = async (formData: FormData) => {
@@ -71,22 +68,9 @@ export default function Login({
       });
 
       if (error) {
-        console.log(error);
         return redirect("/login?message=Could not authenticate user 1");
       }
-
-      // const createdUser = await prisma.user.create({
-      //   data: {
-      //     id: data?.user?.id,
-      //     email,
-      //     username,
-      //     password, 
-      //   },
-      // });
-
-     // console.log(createdUser);
     } catch (error) {
-      console.log(error);
       return redirect("/login?message=Could not authenticate user 2");
     }
     return redirect("/login?message=Check email to continue sign in process");

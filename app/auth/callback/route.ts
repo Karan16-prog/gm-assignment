@@ -32,7 +32,6 @@ export async function GET(request: Request) {
 
         return NextResponse.redirect(`${origin}/`);
       } catch (error) {
-        console.log(error);
         return NextResponse.redirect(
           `${origin}/login?message=Unable to create user`
         );

@@ -30,6 +30,7 @@ model Meal {
   imageUrl    String?
   date        DateTime
   userId      String
+  day         String
   user        User     @relation(fields: [userId], references: [id])
   ingredients MealIngredient[]
 }
