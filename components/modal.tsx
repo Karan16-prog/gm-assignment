@@ -10,11 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 
-interface ExtendedMeal extends Meal {
-  // Add any additional properties here if needed
-  id: string;
-}
-
 export function Modal({
   children,
   meal,

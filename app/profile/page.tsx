@@ -2,8 +2,8 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { prisma } from "../lib/prisma";
-import { SubmitButton } from "../login/submit-button";
+import { prisma } from "../../utils/prisma/prisma";
+import { SubmitButton } from "../../components/submit-button";
 
 export default async function UserProfile({
   searchParams,

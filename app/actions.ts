@@ -1,5 +1,5 @@
 "use server";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/utils/prisma/prisma";
 import { Prisma } from "@prisma/client";
 import { Meal, SavedMeal } from "./interface";
 import { redirect } from "next/navigation";
@@ -38,7 +38,6 @@ export const onSave = async (formData: Meal) => {
         });
       })
     );
-    delete formData.id;
 
     const ingredientIds = createdIngredients.map((ingredient) => ({
       ingredientId: ingredient.id,
@@ -54,7 +53,7 @@ export const onSave = async (formData: Meal) => {
             data: ingredientIds,
           },
         },
-      } as Prisma.MealUncheckedCreateInput, // Cast to MealUncheckedCreateInput
+      } as Prisma.MealUncheckedCreateInput,
       include: {
         ingredients: true,
       },
@@ -62,8 +61,7 @@ export const onSave = async (formData: Meal) => {
     revalidatePath("/");
     return createdMeal;
   } catch (error) {
-    //  alert("Could not update meal");
-    throw new Error("Meal could not be created: " + error); // Throw an error with a descriptive message
+    throw new Error("Meal could not be created: " + error);
   }
 };
 

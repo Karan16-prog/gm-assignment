@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/utils/prisma/prisma";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
