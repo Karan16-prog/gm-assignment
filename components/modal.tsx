@@ -98,13 +98,13 @@ export function Modal({
             {errors.name && <span className="text-red-500">{errors.name}</span>}
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-gray-300">
+            <label htmlFor="imageUrl" className="block text-gray-300">
               Image URL:
             </label>
             <input
               type="text"
-              id="image"
-              name="image"
+              id="imageUrl"
+              name="imageUrl"
               value={formData.imageUrl ?? ""}
               onChange={handleInputChange}
               className="mt-1 p-2 w-full border rounded-md text-gray-700"

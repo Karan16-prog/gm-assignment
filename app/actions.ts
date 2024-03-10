@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { User } from "@supabase/supabase-js";
 
-export const onSave = async (formData: Meal) => {
+export const onSaveMeal = async (formData: Meal) => {
   try {
     const supabase = createClient();
     const {
@@ -65,7 +65,7 @@ export const onSave = async (formData: Meal) => {
   }
 };
 
-export const onEdit = async (mealId: string, formData: Meal) => {
+export const onEditMeal = async (mealId: string, formData: Meal) => {
   try {
     const supabase = createClient();
     const {

@@ -1,4 +1,4 @@
-import { fetchMeals, onEdit, onSave } from "@/app/actions";
+import { fetchMeals, onEditMeal, onSaveMeal } from "@/app/actions";
 import { Day, Meal } from "@/app/interface";
 import { Modal } from "./modal";
 
@@ -13,7 +13,7 @@ const Card: React.FC<Props> = ({ meals }) => {
         <h2 className="text-lg text-gray-700 font-semibold mb-2">{meals[0]}</h2>
         <div className="flex-1 overflow-y-auto">
           {meals[1].map((meal, index) => (
-            <Modal key={index} meal={meal} day={meals[0]} onEdit={onEdit}>
+            <Modal key={index} meal={meal} day={meals[0]} onEdit={onEditMeal}>
               <div
                 key={index}
                 className="mb-2 border rounded-2xl p-2 cursor-pointer bg-gray-100 relative"
@@ -41,7 +41,7 @@ const Card: React.FC<Props> = ({ meals }) => {
           ))}
         </div>
 
-        <Modal onSave={onSave} day={meals[0]}>
+        <Modal onSave={onSaveMeal} day={meals[0]}>
           <button className="absolute bottom-4 right-4 text-gray-700 text-4xl">
             +
           </button>
@@ -51,12 +51,12 @@ const Card: React.FC<Props> = ({ meals }) => {
   );
 };
 
-const CardGrid: React.FC<{ mealsByDay: { [key: string]: Meal[] } }> = async ({
+const CardGrid: React.FC<{ mealsByDay: { [key: string]: Meal[] } }> = ({
   mealsByDay,
 }) => {
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
         {(Object.entries(mealsByDay) as [Day, Meal[]][]).map(
           ([day, meals], index) => (
             <div key={index}>
