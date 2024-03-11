@@ -50,7 +50,7 @@ export default function Login({
     "use server";
 
     // const origin = headers().get("origin");
-    const deploymentOrigin = process.env.NEXT_PUBLIC_APP_URL;
+    const deploymentOrigin = headers().get("origin");
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
