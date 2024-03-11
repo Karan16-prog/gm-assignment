@@ -45,11 +45,10 @@ export default function Login({
   const signUp = async (formData: FormData) => {
     "use server";
 
-    // const origin = headers().get("origin");
-    const defaultUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
-    const deploymentOrigin = defaultUrl;
+    const origin = headers().get("origin");
+    // const defaultUrl = process.env.VERCEL_URL
+    //   ? `https://${process.env.VERCEL_URL}`
+    //   : "http://localhost:3000";
 
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
@@ -61,7 +60,7 @@ export default function Login({
         email,
         password,
         options: {
-          emailRedirectTo: `${deploymentOrigin}/auth/callback`,
+          emailRedirectTo: `${origin}/auth/callback`,
           data: {
             user_name: username,
           },
@@ -72,6 +71,7 @@ export default function Login({
         throw new Error(error.message);
       }
     } catch (error) {
+      console.log(error);
       return redirect("/login?message=Could not authenticate user");
     }
     return redirect("/login?message=Check email to continue sign in process");
