@@ -26,19 +26,15 @@ export default function Login({
         }
       );
 
-      // if (authError) {
-      //   return redirect("/login?message=Could not authenticate user");
-      // }
+      if (authError) {
+        throw new Error(authError.message);
+      }
 
       const userFromDb = await prisma.user.findUnique({
         where: {
           email,
         },
       });
-
-      // if (!userFromDb) {
-      //   return redirect("/login?message=User not found");
-      // }
     } catch (error) {
       return redirect("/login?message=Could not authenticate user");
     }
@@ -73,11 +69,9 @@ export default function Login({
       });
 
       if (error) {
-        console.log(error);
         throw new Error(error.message);
       }
     } catch (error) {
-      console.log(error);
       return redirect("/login?message=Could not authenticate user");
     }
     return redirect("/login?message=Check email to continue sign in process");
