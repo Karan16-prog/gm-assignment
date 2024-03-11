@@ -26,9 +26,9 @@ export default function Login({
         }
       );
 
-      if (authError) {
-        return redirect("/login?message=Could not authenticate user");
-      }
+      // if (authError) {
+      //   return redirect("/login?message=Could not authenticate user");
+      // }
 
       const userFromDb = await prisma.user.findUnique({
         where: {
@@ -36,9 +36,9 @@ export default function Login({
         },
       });
 
-      if (!userFromDb) {
-        return redirect("/login?message=User not found");
-      }
+      // if (!userFromDb) {
+      //   return redirect("/login?message=User not found");
+      // }
     } catch (error) {
       return redirect("/login?message=Could not authenticate user");
     }
@@ -50,7 +50,11 @@ export default function Login({
     "use server";
 
     // const origin = headers().get("origin");
-    const deploymentOrigin = headers().get("origin");
+    const defaultUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000";
+    const deploymentOrigin = defaultUrl;
+
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -68,10 +72,10 @@ export default function Login({
         },
       });
 
-      if (error) {
-        console.log(error);
-        return redirect("/login?message=Could not authenticate user");
-      }
+      // if (error) {
+      //   console.log(error);
+      //   return redirect("/login?message=Could not authenticate user");
+      // }
     } catch (error) {
       console.log(error);
       return redirect("/login?message=Could not authenticate user");

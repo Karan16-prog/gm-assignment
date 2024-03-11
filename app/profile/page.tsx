@@ -39,9 +39,9 @@ export default async function UserProfile({
         },
       });
 
-      if (error) {
-        throw new Error(`${error.message}`);
-      }
+      // if (error) {
+      //   throw new Error(`${error.message}`);
+      // }
 
       // Find and update user in Prisma database
       const updatedUser = await prisma.user.update({
