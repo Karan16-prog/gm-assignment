@@ -42,7 +42,7 @@ export const onSaveMeal = async (formData: Meal) => {
     const ingredientIds = createdIngredients.map((ingredient) => ({
       ingredientId: ingredient.id,
     }));
-
+    console.log(user);
     const createdMeal = await prisma.meal.create({
       data: {
         userId: user?.id,
