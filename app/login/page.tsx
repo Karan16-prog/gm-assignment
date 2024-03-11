@@ -49,7 +49,8 @@ export default function Login({
   const signUp = async (formData: FormData) => {
     "use server";
 
-    const origin = headers().get("origin");
+    // const origin = headers().get("origin");
+    const deploymentOrigin = process.env.NEXT_PUBLIC_APP_URL;
     const username = formData.get("username") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -60,7 +61,7 @@ export default function Login({
         email,
         password,
         options: {
-          emailRedirectTo: `${origin}/auth/callback`,
+          emailRedirectTo: `${deploymentOrigin}/auth/callback`,
           data: {
             user_name: username,
           },
