@@ -72,10 +72,10 @@ export default function Login({
         },
       });
 
-      // if (error) {
-      //   console.log(error);
-      //   return redirect("/login?message=Could not authenticate user");
-      // }
+      if (error) {
+        console.log(error);
+        throw new Error(error.message);
+      }
     } catch (error) {
       console.log(error);
       return redirect("/login?message=Could not authenticate user");
