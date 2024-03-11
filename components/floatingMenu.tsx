@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-
+import IngredientsModal from "./ingredientsModal";
 const FloatingMenu = () => {
   const router = useRouter();
 
@@ -31,6 +31,11 @@ const FloatingMenu = () => {
         <DropdownMenuSeparator className="border-white" />
         <DropdownMenuItem className="hover:bg-gray-800">
           <Link href="/profile"> Update Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="hover:bg-gray-800">
+          <IngredientsModal>
+            <button>Add Ingredients</button>
+          </IngredientsModal>
         </DropdownMenuItem>
         <DropdownMenuItem className="hover:bg-gray-800">
           <button className="" onClick={signOut}>

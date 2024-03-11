@@ -42,7 +42,7 @@ export const onSaveMeal = async (formData: Meal) => {
     const ingredientIds = createdIngredients.map((ingredient) => ({
       ingredientId: ingredient.id,
     }));
-    console.log(user);
+    // console.log(user);
     const createdMeal = await prisma.meal.create({
       data: {
         userId: user?.id,
@@ -137,5 +137,52 @@ export const fetchMeals = async (user: User) => {
     return meals;
   } catch (error) {
     throw new Error("Meal could not be fetched: " + error); // Throw an erro
+  }
+};
+export const fetchIngredients = async () => {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const ingredients = await prisma.ingredientB.findMany({
+      where: {
+        userId: user?.id,
+      },
+    });
+
+    return ingredients;
+  } catch (error) {
+    throw new Error("Meal could not be fetched: " + error); // Throw an erro
+  }
+};
+
+export const addIngredient = async (ing: string) => {
+  // case - need to check if ingredient already exists or not
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const createdIngredients = await prisma.ingredientB.create({
+      data: {
+        name: ing,
+        userId: user?.id,
+      },
+    });
+    revalidatePath("/");
+    return createdIngredients;
+  } catch (error) {
+    throw new Error("Meal could not be created: " + error);
   }
 };

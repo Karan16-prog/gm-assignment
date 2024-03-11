@@ -21,6 +21,7 @@ model User {
   email     String   @unique
   username  String   @unique
   meals     Meal[]
+  ingredientB ingredientB[]
 }
 
 model Meal {
@@ -42,6 +43,8 @@ model Ingredient {
   meals     MealIngredient[]
 }
 
+
+
 model MealIngredient {
   id           Int        @id @default(autoincrement())
   meal         Meal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
@@ -50,4 +53,11 @@ model MealIngredient {
   ingredientId Int
 
   @@unique([mealId, ingredientId])
+}
+
+model IngredientB {
+  id        Int    @id @default(cuid())
+  name      String @unique
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
 }

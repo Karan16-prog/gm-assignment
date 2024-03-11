@@ -8,7 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchIngredients } from "@/app/actions";
 
 export function Modal({
   children,
@@ -16,12 +17,18 @@ export function Modal({
   onSave,
   onEdit,
   day,
+  ingData,
 }: {
   children: React.ReactNode;
   meal?: Meal;
   onSave?: (formData: Meal) => Promise<SavedMeal>;
   onEdit?: (mealId: string, formData: Meal) => Promise<EditedMeal>;
   day: Day;
+  ingData: {
+    id: number;
+    name: string;
+    userId: string;
+  }[];
 }) {
   const [formData, setFormData] = useState<Meal>(
     meal || {
@@ -126,7 +133,7 @@ export function Modal({
             <label htmlFor="ingredients" className="block text-gray-300">
               Ingredients:
             </label>
-            <input
+            {/* <input
               type="text"
               id="ingredients"
               name="ingredients"
@@ -134,6 +141,14 @@ export function Modal({
               placeholder="Milk, Egg, Yeast ..."
               onChange={handleInputChange}
               className="mt-1 p-2 w-full border rounded-md text-gray-700"
+              // onFocus={}
+            /> */}
+            <IngredientDropdown
+              ingData={ingData}
+              ingredientsValue={formData.ingredients}
+              onIngredientsChange={(value) =>
+                setFormData({ ...formData, ingredients: value })
+              }
             />
           </div>{" "}
           <button
@@ -151,3 +166,60 @@ export function Modal({
     </Dialog>
   );
 }
+
+// 2. need to display as a dropdown
+// 3. on click, needs to append to the input
+
+interface IngredientDropdownProps {
+  ingData: { id: number; name: string; userId: string }[];
+  ingredientsValue: any;
+  onIngredientsChange: (value: string) => void;
+}
+
+const IngredientDropdown: React.FC<IngredientDropdownProps> = ({
+  ingData,
+  ingredientsValue,
+  onIngredientsChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleIngredientClick = (ingredient: {
+    id: number;
+    name: string;
+    userId: string;
+  }) => {
+    const newIngredients = ingredientsValue
+      ? `${ingredientsValue}, ${ingredient.name}`
+      : ingredient.name;
+    onIngredientsChange(newIngredients);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        id="ingredients"
+        name="ingredients"
+        value={ingredientsValue}
+        placeholder="Milk, Egg, Yeast ..."
+        onChange={(e) => onIngredientsChange(e.target.value)}
+        className="mt-1 p-2 w-full border rounded-md text-gray-700"
+        onClick={() => setIsOpen(!isOpen)}
+      />
+      {isOpen && (
+        <div className="absolute z-10 w-full bg-white text-gray-700 rounded-md shadow-lg">
+          {ingData.map((ingredient) => (
+            <div
+              key={ingredient.id}
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleIngredientClick(ingredient)}
+            >
+              {ingredient.name}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
