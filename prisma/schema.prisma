@@ -21,7 +21,7 @@ model User {
   email     String   @unique
   username  String   @unique
   meals     Meal[]
-  ingredientB ingredientB[]
+  ingredientB IngredientB[]
 }
 
 model Meal {
@@ -56,7 +56,7 @@ model MealIngredient {
 }
 
 model IngredientB {
-  id        Int    @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String @unique
   userId    String
   user      User   @relation(fields: [userId], references: [id])
