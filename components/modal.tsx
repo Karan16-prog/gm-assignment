@@ -25,7 +25,7 @@ export function Modal({
   onEdit?: (mealId: string, formData: Meal) => Promise<EditedMeal>;
   day: Day;
   ingData: {
-    id: number;
+    id: string;
     name: string;
     userId: string;
   }[];
@@ -171,7 +171,7 @@ export function Modal({
 // 3. on click, needs to append to the input
 
 interface IngredientDropdownProps {
-  ingData: { id: number; name: string; userId: string }[];
+  ingData: { id: string; name: string; userId: string }[];
   ingredientsValue: any;
   onIngredientsChange: (value: string) => void;
 }
@@ -184,7 +184,7 @@ const IngredientDropdown: React.FC<IngredientDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleIngredientClick = (ingredient: {
-    id: number;
+    id: string;
     name: string;
     userId: string;
   }) => {

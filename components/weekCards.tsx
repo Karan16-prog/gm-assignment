@@ -5,7 +5,7 @@ import { Modal } from "./modal";
 interface Props {
   meals: [Day, Meal[]];
   ingData: {
-    id: number;
+    id: string;
     name: string;
     userId: string;
   }[];
@@ -65,7 +65,7 @@ const Card: React.FC<Props> = ({ meals, ingData }) => {
 const CardGrid: React.FC<{
   mealsByDay: { [key: string]: Meal[] };
   ingData: {
-    id: number;
+    id: string;
     name: string;
     userId: string;
   }[];
