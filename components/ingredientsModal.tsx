@@ -50,7 +50,7 @@ const IngredientsModal = ({ children }: { children: React.ReactNode }) => {
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 max-auto rounded hover:bg-blue-600"
+            className="bg-blue-500 mt-3 text-white px-4 py-2 max-auto rounded hover:bg-blue-600"
           >
             Add Ingredient
           </button>

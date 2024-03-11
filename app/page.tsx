@@ -58,7 +58,9 @@ export default async function Index() {
         Meal Planner
       </h3>
       <IngredientsModal>
-        <button>Add Ingredients</button>
+        <button className="bg-blue-500 text-white px-4 py-2 max-auto rounded hover:bg-blue-600 mb-5">
+          Add Ingredients
+        </button>
       </IngredientsModal>
       <CardGrid mealsByDay={mealsByDay} ingData={ingData} />
       <div className="fixed bottom-0 right-0 p-4">

@@ -32,11 +32,11 @@ const FloatingMenu = () => {
         <DropdownMenuItem className="hover:bg-gray-800">
           <Link href="/profile"> Update Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="hover:bg-gray-800">
+        {/* <DropdownMenuItem className="hover:bg-gray-800">
           <IngredientsModal>
             <button>Add Ingredients</button>
           </IngredientsModal>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem className="hover:bg-gray-800">
           <button className="" onClick={signOut}>
             Logout
